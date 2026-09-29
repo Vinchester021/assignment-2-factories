@@ -1,0 +1,154 @@
+@startuml
+title Smart Security System — Factory Patterns
+
+skinparam classAttributeIconSize 0
+skinparam packageStyle rectangle
+hide empty fields
+hide empty methods
+
+package "Abstract Factory Pattern" #E8F4FF {
+
+    interface AccessController {
+        + lockAllEntrances(): String
+        + openEmergencyExits(): String
+        + getAccessMethod(): String
+    }
+
+    interface SecuritySensor {
+        + startMonitoring(): String
+        + detectThreat(threatType: String): boolean
+        + getSensorType(): String
+    }
+
+    interface AlertService {
+        + sendAlert(message: String): String
+        + notifyEmergencyService(): String
+        + getAlertChannel(): String
+    }
+
+    interface SecuritySystemFactory {
+        + createAccessController(): AccessController
+        + createSecuritySensor(): SecuritySensor
+        + createAlertService(): AlertService
+    }
+
+    class ApartmentAccessController
+    class ApartmentSecuritySensor
+    class ApartmentAlertService
+    class ApartmentSecurityFactory
+
+    class VillaAccessController
+    class VillaSecuritySensor
+    class VillaAlertService
+    class VillaSecurityFactory
+
+    class OfficeAccessController
+    class OfficeSecuritySensor
+    class OfficeAlertService
+    class OfficeSecurityFactory
+
+    class WarehouseAccessController
+    class WarehouseSecuritySensor
+    class WarehouseAlertService
+    class WarehouseSecurityFactory
+
+    class SecuritySystem {
+        - accessController: AccessController
+        - securitySensor: SecuritySensor
+        - alertService: AlertService
+        + SecuritySystem(factory: SecuritySystemFactory)
+        + armSystem(): String
+        + handleIntrusion(threatType: String): String
+        + startEvacuation(): String
+    }
+
+    AccessController <|.. ApartmentAccessController
+    AccessController <|.. VillaAccessController
+    AccessController <|.. OfficeAccessController
+    AccessController <|.. WarehouseAccessController
+
+    SecuritySensor <|.. ApartmentSecuritySensor
+    SecuritySensor <|.. VillaSecuritySensor
+    SecuritySensor <|.. OfficeSecuritySensor
+    SecuritySensor <|.. WarehouseSecuritySensor
+
+    AlertService <|.. ApartmentAlertService
+    AlertService <|.. VillaAlertService
+    AlertService <|.. OfficeAlertService
+    AlertService <|.. WarehouseAlertService
+
+    SecuritySystemFactory <|.. ApartmentSecurityFactory
+    SecuritySystemFactory <|.. VillaSecurityFactory
+    SecuritySystemFactory <|.. OfficeSecurityFactory
+    SecuritySystemFactory <|.. WarehouseSecurityFactory
+
+    ApartmentSecurityFactory ..> ApartmentAccessController : creates
+    ApartmentSecurityFactory ..> ApartmentSecuritySensor : creates
+    ApartmentSecurityFactory ..> ApartmentAlertService : creates
+
+    VillaSecurityFactory ..> VillaAccessController : creates
+    VillaSecurityFactory ..> VillaSecuritySensor : creates
+    VillaSecurityFactory ..> VillaAlertService : creates
+
+    OfficeSecurityFactory ..> OfficeAccessController : creates
+    OfficeSecurityFactory ..> OfficeSecuritySensor : creates
+    OfficeSecurityFactory ..> OfficeAlertService : creates
+
+    WarehouseSecurityFactory ..> WarehouseAccessController : creates
+    WarehouseSecurityFactory ..> WarehouseSecuritySensor : creates
+    WarehouseSecurityFactory ..> WarehouseAlertService : creates
+
+    SecuritySystem --> AccessController : uses
+    SecuritySystem --> SecuritySensor : uses
+    SecuritySystem --> AlertService : uses
+    SecuritySystem ..> SecuritySystemFactory : initialized by
+}
+
+package "Factory Method Pattern" #FFF2CC {
+
+    interface SecurityEvent {
+        + getType(): String
+        + getDescription(): String
+        + getPriority(): int
+    }
+
+    class IntrusionEvent
+    class FireEvent
+    class VacationEvent
+
+    abstract class SecurityEventCreator {
+        + createEvent(): SecurityEvent
+        # executeResponse(system: SecuritySystem): String
+        + processEvent(system: SecuritySystem): String
+    }
+
+    class IntrusionEventCreator
+    class FireEventCreator
+    class VacationEventCreator
+
+    SecurityEvent <|.. IntrusionEvent
+    SecurityEvent <|.. FireEvent
+    SecurityEvent <|.. VacationEvent
+
+    SecurityEventCreator <|-- IntrusionEventCreator
+    SecurityEventCreator <|-- FireEventCreator
+    SecurityEventCreator <|-- VacationEventCreator
+
+    IntrusionEventCreator ..> IntrusionEvent : creates
+    FireEventCreator ..> FireEvent : creates
+    VacationEventCreator ..> VacationEvent : creates
+
+    SecurityEventCreator ..> SecurityEvent : Factory Method
+    SecurityEventCreator ..> SecuritySystem : executes response
+}
+
+class Main {
+    + main(args: String[]): void
+    + selectFactory(family: String): SecuritySystemFactory
+}
+
+Main ..> SecuritySystemFactory : selects at runtime
+Main ..> SecuritySystem : creates client
+Main ..> SecurityEventCreator : processes events
+
+@enduml
