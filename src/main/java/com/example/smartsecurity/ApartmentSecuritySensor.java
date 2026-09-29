@@ -10,7 +10,8 @@ public class ApartmentSecuritySensor implements SecuritySensor {
     @Override
     public boolean detectThreat(String threatType) {
         return threatType.equalsIgnoreCase("smoke")
-                || threatType.equalsIgnoreCase("motion");
+                || threatType.equalsIgnoreCase("motion")
+                || threatType.equalsIgnoreCase("intrusion");
     }
 
     @Override
