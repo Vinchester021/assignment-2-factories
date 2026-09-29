@@ -53,6 +53,7 @@ public class Main {
             case "apartment" -> new ApartmentSecurityFactory();
             case "villa" -> new VillaSecurityFactory();
             case "office" -> new OfficeSecurityFactory();
+            case "warehouse" -> new WarehouseSecurityFactory();
             default -> throw new IllegalArgumentException(
                     "Unknown security family: " + family
             );
