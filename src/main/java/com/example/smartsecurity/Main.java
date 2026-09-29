@@ -13,17 +13,32 @@ public class Main {
         SecuritySystemFactory factory = selectFactory(family);
         SecuritySystem securitySystem = new SecuritySystem(factory);
 
+        SecurityEventCreator vacationCreator =
+                new VacationEventCreator();
+
+        SecurityEventCreator intrusionCreator =
+                new IntrusionEventCreator();
+
+        SecurityEventCreator fireCreator =
+                new FireEventCreator();
+
         System.out.println("=== SMART SECURITY SYSTEM ===");
         System.out.println("Selected family: " + family);
 
-        System.out.println("\n--- Operation 1: Arm system ---");
-        System.out.println(securitySystem.armSystem());
+        System.out.println("\n--- Operation 1: Vacation mode ---");
+        System.out.println(
+                vacationCreator.processEvent(securitySystem)
+        );
 
         System.out.println("\n--- Operation 2: Handle intrusion ---");
-        System.out.println(securitySystem.handleIntrusion("intrusion"));
+        System.out.println(
+                intrusionCreator.processEvent(securitySystem)
+        );
 
-        System.out.println("\n--- Operation 3: Start evacuation ---");
-        System.out.println(securitySystem.startEvacuation());
+        System.out.println("\n--- Operation 3: Handle fire ---");
+        System.out.println(
+                fireCreator.processEvent(securitySystem)
+        );
     }
 
     public static SecuritySystemFactory selectFactory(String family) {
